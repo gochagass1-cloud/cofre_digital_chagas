@@ -1,0 +1,35 @@
+name: Pratica dos Alunos - Gerar Arquivo e Ver Actions
+
+on:
+  push:
+    paths:
+      - 'scripts/pratica-alunos.sh'
+      - '.github/workflows/pratica-alunos.yml'
+
+jobs:
+  pratica-alunos:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+  
+      - name: Dar permissão de execuçao ao script
+        run: chmod +x scripts/pratica-alunos.sh
+
+      - name: Executar script da prática
+        run: ./scripts/pratica-alunos.sh
+
+      - name: Verificar se o arquivo foi gerado
+        run: |
+          if [ ! -f resultado-pratica.txt ]; then
+            echo "Arquivo resultado-pratica.txt NÃO foi gerado."
+            exit 1
+          fi
+          echo "Arquivo resultado-pratica.txt encontrado com sucesso."
+
+      - name: Publicar arquivo como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultado-pratica
+          path: resultado-pratica.txt
